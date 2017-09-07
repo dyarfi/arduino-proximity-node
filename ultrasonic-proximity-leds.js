@@ -5,8 +5,8 @@ var board = new five.Board();
 board.on("ready", function() {
 	
 	// Set up variables
-	/*** RGB LED ***/
-	var rgb = new five.Led.RGB([11,9,10]);
+  // RGB LED
+  var rgb = new five.Led.RGB([5,6,4]);
 	/*** LEDS RGB ***/	
 	//var leds = new five.Leds([3, 5, 6]);
 	//var led = new five.Led(6);
@@ -14,7 +14,7 @@ board.on("ready", function() {
 	/*** Proximity Sensors ***/	
   	var proximity = new five.Proximity({
 	    controller: "HCSR04",
-	    pin: 7,
+	    pin: 2,
 	    freq: "700"
   	});
   	/*** Firebase Setup Config ***/
@@ -129,13 +129,14 @@ board.on("ready", function() {
 	      setTimeout(function() {
 	        nref.push(
 	            {
+                'type':'leds',
 	            'message':'Hi, someone turn the led to red!',
 	            'timestamp':firebase.database.ServerValue.TIMESTAMP
 	        });       
 	      },800);
 	    } else {
 	      ref.set('blue');
-	      //rgb.color("FFFF00");
+	      rgb.color("FFFF00");
 	    }
 	    //console.log(exct +" The obstruction has moved.");
 	  });

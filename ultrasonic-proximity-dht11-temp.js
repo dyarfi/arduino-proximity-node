@@ -12,6 +12,23 @@ board.on("ready", function() {
         pin: 2,
         freq: 900
     });
+    
+    // Temperature and Humidity sensor DHT11
+    var thermometer = new five.Thermometer({
+        //controller: "DHT11",
+        controller: "DHT11_I2C_NANO_BACKPACK",
+        //pin: 8,
+        freq: 1000
+    });
+
+    thermometer.on("change", function() {
+        console.log("Thermometer");
+        console.log("  celsius           : ", this.celsius);
+        console.log("  fahrenheit        : ", this.fahrenheit);
+        console.log("  kelvin            : ", this.kelvin);
+        console.log("--------------------------------------");
+    });
+
     // Firebase Initialize
     firebase.initializeApp({
         apiKey: "AIzaSyCnCCmWUR9vVDSMxmlcbuEOKGV_jekKEQw",
@@ -55,7 +72,7 @@ board.on("ready", function() {
             // Set a second for saving data in firebase 
             setTimeout(function() {
                 nref.push({
-                    'type':'proximity',
+                    'type':'dht11',
                     'message':'Hi, Red LED detected!',
                     'timestamp':firebase.database.ServerValue.TIMESTAMP
                 });       

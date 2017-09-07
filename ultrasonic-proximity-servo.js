@@ -20,11 +20,12 @@ board.on("ready", function() {
   	var ref   = firebase.database().ref('color');
   	var nref  = firebase.database().ref('person');
 
-  	var rgb = new five.Led.RGB([11,9,10]);
+    // RGB LED
+    var rgb = new five.Led.RGB([5,6,4]);
 
   	var proximity = new five.Proximity({
 	    controller: "HCSR04",
-	    pin: 7,
+	    pin: 2,
 	    freq: "700"
   	});
   	
@@ -85,8 +86,9 @@ board.on("ready", function() {
 	      setTimeout(function() {
 	        nref.push(
 	            {
-	            'message':'Hi, someone turn the led to red!',
-	            'timestamp':firebase.database.ServerValue.TIMESTAMP
+                    'type':'servo',
+                    'message':'Hi, someone turn the led to red!',
+                    'timestamp':firebase.database.ServerValue.TIMESTAMP
 	        });       
 	      },800);
 	    } else {

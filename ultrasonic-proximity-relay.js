@@ -12,6 +12,8 @@ board.on("ready", function() {
         pin: 2,
         freq: 900
     });
+    // Relay module
+    var relay = new five.Relay(10);   
     // Firebase Initialize
     firebase.initializeApp({
         apiKey: "AIzaSyCnCCmWUR9vVDSMxmlcbuEOKGV_jekKEQw",
@@ -24,12 +26,36 @@ board.on("ready", function() {
     // Firebase references
     var ref   = firebase.database().ref('color');
     var nref  = firebase.database().ref('person');
-    // Check references value
+    var lref  = firebase.database().ref('lights');
+    
+    // Check on the leds references value
     ref.on('value', function(snapshot) {
         if(snapshot.val() =='red') {
             rgb.color("FF0000");        
         } else if (snapshot.val() =='off'){        
 
+        }
+    });
+    // Check on the lights references value
+    lref.on('value', function(snapshot) {
+        if(snapshot.val() =='on') {
+            relay.on();       
+            setTimeout(function() {
+                nref.push({
+                    'type':'relay_on',
+                    'message':'Hi, XMAS Light is ON!',
+                    'timestamp':firebase.database.ServerValue.TIMESTAMP
+                });       
+            },1000);      
+        } else if (snapshot.val() =='off'){        
+            relay.off();                   
+            setTimeout(function() {
+                nref.push({
+                    'type':'relay_off',
+                    'message':'Hi, XMAS Light is OFF!',
+                    'timestamp':firebase.database.ServerValue.TIMESTAMP
+                });       
+            },1000);      
         }
     });
     // Proximity on Data function
@@ -55,8 +81,8 @@ board.on("ready", function() {
             // Set a second for saving data in firebase 
             setTimeout(function() {
                 nref.push({
-                    'type':'proximity',
-                    'message':'Hi, Red LED detected!',
+                    'type':'relay_proximity',
+                    'message':'Hi, Someone arrived!',
                     'timestamp':firebase.database.ServerValue.TIMESTAMP
                 });       
             },1000);            
@@ -66,6 +92,7 @@ board.on("ready", function() {
             //         'timestamp':firebase.database.ServerValue.TIMESTAMP
             //     });
             // });
+        //} else if (exct < 100) {
         } else {
             ref.set('blue');
             rgb.color("FFFF00");
