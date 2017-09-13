@@ -26,7 +26,8 @@ board.on("ready", function() {
     // Firebase references
     var ref   = firebase.database().ref('color');
     var nref  = firebase.database().ref('person');
-    var lref  = firebase.database().ref('lights');    
+    var lref  = firebase.database().ref('lights');
+    
     // Check on the leds references value
     ref.on('value', function(snapshot) {
         if(snapshot.val() =='red') {
@@ -35,10 +36,11 @@ board.on("ready", function() {
 
         }
     });
+
     // Check on the lights references value
     lref.on('value', function(snapshot) {
         if(snapshot.val() =='on') {
-            relay.on();
+            relay.on();       
             setTimeout(function() {
                 nref.push({
                     'type':'relay_on',
@@ -57,7 +59,9 @@ board.on("ready", function() {
             },1000);
         }
     });
-    // Proximity on Data function    
+
+    // Proximity on Data function
+    
     proximity.on("data", function() {
         var cmtr = this.cm;
         var inch = this.in;
@@ -67,8 +71,11 @@ board.on("ready", function() {
         console.log("  cm  : ", cmtr + ' ('+excm+')');
         console.log("  in  : ", inch + ' ('+exin+')');
         console.log("-----------------");
-    });    
-    // Proximity on Data Change function    
+    });
+    
+
+    // Proximity on Data Change function
+    
     proximity.on("change", function() {
         var cmtr = this.cm;
         var inch = this.in;
@@ -77,19 +84,26 @@ board.on("ready", function() {
         if (exct < 20) {
             ref.set('red');
             rgb.color("FF0000");
-            setTimeout(function() {            
-                if(relay.isOn) {
-                    lref.set('off');
-                    relay.off();
-                } else {
-                    lref.set('on');
-                    relay.on();
-                }
-            },1000);
+            // Set a second for saving data in firebase 
+            setTimeout(function() {
+                nref.push({
+                    'type':'relay_proximity',
+                    'message':'Hi, Someone arrived!',
+                    'timestamp':firebase.database.ServerValue.TIMESTAMP
+                });       
+            },1000);            
+            // $this.wait(800, function(){
+            //     nref.push({
+            //         'message':'Hi, someone turn the led to red!',
+            //         'timestamp':firebase.database.ServerValue.TIMESTAMP
+            //     });
+            // });
+        //} else if (exct < 100) {
         } else {
             ref.set('blue');
             rgb.color("FFFF00");
         }
     });
+    
 });
 
