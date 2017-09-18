@@ -60,8 +60,7 @@ board.on("ready", function() {
         }
     });
 
-    // Proximity on Data function
-    
+    // Proximity on Data function    
     proximity.on("data", function() {
         var cmtr = this.cm;
         var inch = this.in;

@@ -10,7 +10,7 @@ board.on("ready", function() {
   // Controller: PCF8574A (Generic I2C)
   // Locate the controller chip model number on the chip itself.
   var l = new five.LCD({
-    controller: "PCF8574AT",
+    controller: "PCF8574A",
     rows: 2,
     cols: 16
   });
